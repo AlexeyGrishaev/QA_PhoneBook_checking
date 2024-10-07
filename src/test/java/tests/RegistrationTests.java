@@ -1,60 +1,74 @@
 package tests;
 
 import dto.StudentDTO;
-import main.ApplicationManager;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
 
-public class LoginTests extends TestBase {
+import java.util.Random;
+
+public class RegistrationTests extends TestBase {
     @AfterMethod
     public void preCondition(){
         if(app.getHelperUser().isElementSignOutPresent()){
             app.getHelperUser().logout();
         }
     }
-
     @Test
-    public void loginPositiveTest(){
+    public void registrationPositiveTest() {
+        int i = (int) (System.currentTimeMillis()/1000)%3600;
         StudentDTO studentDTO = StudentDTO.builder()
-                .userName("locker@gmail.com")
+                .userName("locker"+i+"@gmail.com")
                 .password("Qwerty1234!")
                 .build();
         app.getHelperUser().openLoginRegistrationForm();
         app.getHelperUser().fillLoginRegistrationForm(studentDTO);
-        app.getHelperUser().submitLogin();
+        app.getHelperUser().submitRegistration();
         Assert.assertTrue(app.getHelperUser().isElementSignOutPresent());
+        Assert.assertTrue(app.getHelperUser().isNoContactsHere());
     }
+
     @Test
-    public void loginWrongEmail(){
+    public void registrationWrongEmail() {
+
         StudentDTO studentDTO = StudentDTO.builder()
                 .userName("lockergmail.com")
                 .password("Qwerty1234!")
                 .build();
         app.getHelperUser().openLoginRegistrationForm();
         app.getHelperUser().fillLoginRegistrationForm(studentDTO);
-        app.getHelperUser().submitLogin();
-        Assert.assertTrue(app.getHelperUser().isAlertPresent("Wrong email or password"));
+        app.getHelperUser().submitRegistration();
+        Assert.assertTrue(app.getHelperUser().isAlertPresent("Wrong email or password format"));
+
     }
+
     @Test
-    public void loginWrongPassword(){
+    public void registrationWrongPassword() {
+
+        int i = (int) (System.currentTimeMillis()/1000)%3600;
         StudentDTO studentDTO = StudentDTO.builder()
-                .userName("locker@gmail.com")
-                .password("Qw34")
+                .userName("locker"+i+"@gmail.com")
+                .password("werty")
                 .build();
         app.getHelperUser().openLoginRegistrationForm();
         app.getHelperUser().fillLoginRegistrationForm(studentDTO);
-        app.getHelperUser().submitLogin();
-        Assert.assertTrue(app.getHelperUser().isAlertPresent("Wrong email or password"));
+        app.getHelperUser().submitRegistration();
+        Assert.assertTrue(app.getHelperUser().isAlertPresent("Wrong email or password format"));
+
     }
     @Test
-    public void loginUnregisteredUser(){
+    public void registrationExistUser() {
+
+        int i = (int) (System.currentTimeMillis()/1000)%3600;
         StudentDTO studentDTO = StudentDTO.builder()
-                .userName("123locker@gmail.com")
+                .userName("locker@gmail.com")
                 .password("Qwerty1234!")
                 .build();
         app.getHelperUser().openLoginRegistrationForm();
         app.getHelperUser().fillLoginRegistrationForm(studentDTO);
-        app.getHelperUser().submitLogin();
-        Assert.assertTrue(app.getHelperUser().isAlertPresent("Wrong email or password"));
+        app.getHelperUser().submitRegistration();
+        Assert.assertTrue(app.getHelperUser().isAlertPresent("User already exist"));
+
     }
+
 }

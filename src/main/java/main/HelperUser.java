@@ -16,7 +16,12 @@ public class HelperUser extends HelperBase {
     By btnSubmitLogin = By.xpath("//button[@name='login']");
     By btnSubmitRegistration = By.xpath("//button[@name='registration']");
     By btnSignOut = By.xpath("//button[text()='Sign Out']");
+    By headerNoContacts = By.xpath("//div[@class='contact-page_message__2qafk']/h1");
 
+
+    public boolean isNoContactsHere(){
+        return new WebDriverWait(wd,5).until(ExpectedConditions.textToBePresentInElement(findElementBase(headerNoContacts),"No Contacts here!"));
+    }
     public void openLoginRegistrationForm() {
         clickBaseWait(btnLogin, 5);
     }
@@ -31,17 +36,12 @@ public class HelperUser extends HelperBase {
     }
 
     public boolean isElementSignOutPresent() {
-        try {
-            return isElementPresent(btnSignOut);
-        }catch (NoSuchElementException e){
-            System.out.println(e.getMessage());
-            return false;
-        }
+        return isElementPresent(btnSignOut);
     }
 
 
     public boolean isAlertPresent(String message) {
-        Alert alert = new WebDriverWait(wd, 10).until(ExpectedConditions.alertIsPresent());
+        Alert alert = new WebDriverWait(wd, 5).until(ExpectedConditions.alertIsPresent());
         if (alert != null && alert.getText().contains(message)) {
             alert.accept();
             return true;
@@ -50,6 +50,12 @@ public class HelperUser extends HelperBase {
     }
 
     public void logout() {
-        clickBaseWait(btnSignOut,5);
+        clickBaseWait(btnSignOut, 5);
     }
+
+    public void submitRegistration() {
+        clickBaseWait(btnSubmitRegistration, 5);
+    }
+
+
 }
