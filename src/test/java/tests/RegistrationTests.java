@@ -34,7 +34,7 @@ public class RegistrationTests extends TestBase {
         StudentDTO studentDTO = StudentDTO.builder()
                 .userName("lockergmail.com")
                 .password("Qwerty1234!")
-                .build();
+                .build();//s
         app.getHelperUser().openLoginRegistrationForm();
         app.getHelperUser().fillLoginRegistrationForm(studentDTO);
         app.getHelperUser().submitRegistration();
